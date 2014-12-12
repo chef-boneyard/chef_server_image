@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: chef-server
+# Cookbook Name:: chef-server-image
 # Attributes:: default
 #
-# Copyright:: Copyright (c) 2012 Opscode, Inc.
+# Copyright:: Copyright (c) 2014 Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

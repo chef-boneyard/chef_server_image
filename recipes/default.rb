@@ -25,7 +25,7 @@ end
 
 # clone chef-repo
 git "#{ENV['HOME']}/chef-repo/" do
-  repository "node['chef-server-image'][chef-repo]"
+  repository "node['chef-server-image']['chef-repo']"
   revision "master"
 end
 
