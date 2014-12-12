@@ -25,7 +25,7 @@ end
 
 # clone chef-repo
 git "#{ENV['HOME']}/chef-repo/" do
-  repository "node['chef-server-image']['chef-repo']"
+  repository "#{node['chef-server-image']['chef-repo']}"
   revision "master"
 end
 
@@ -41,6 +41,7 @@ end
 # cleanup temp directory
 directory "#{temp_dir}" do
   action :delete
+  recursive true
 end
 
 # place chef-server-setup.sh to chef package dir
