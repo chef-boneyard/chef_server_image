@@ -53,7 +53,7 @@ end
 
 # create symlink for /chef/opt/bin/chef-server-setup.sh to /usr/bin/
 link "#{chef_path}/chef-server-setup" do
-  to "/usr/bin"
+  to "/usr/bin/chef-server-setup"
 end
 
 # creates attribute json file for chef-server cookbook
@@ -72,8 +72,8 @@ end
 bash "update .bashrc to show chef-server configuration help" do
   cwd "#{ENV['HOME']}"
   code <<-EOH
-  echo '#{chef_path}/chef-server-setup-help.sh' >> .bashrc
+  cat '#{chef_path}/chef-server-setup-help.sh' >> .bashrc
   EOH
 
-  not_if { ::File.read("#{ENV['HOME']}/.bashrc").include?("#{chef_path}/chef-server-setup-help.sh") } 
+  not_if { ::File.read("#{ENV['HOME']}/.bashrc").include?("chef-server-setup") } 
 end
