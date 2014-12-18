@@ -56,7 +56,7 @@ when 'ubuntu'
   bash "update .bashrc to show chef-server configuration help" do
     cwd "#{ENV['HOME']}"
     code <<-EOH
-    echo '
+    sudo echo '
      sudo chef-server-ctl status opscode-erchef | grep "run: opscode-erchef"
      if [ $? -ne 0 ]; then
        echo "
@@ -73,7 +73,7 @@ when 'ubuntu'
         ###
         #############################################################################################"
      fi
-     ' >> .bashrc
+     ' >> ~/.bashrc
     EOH
   end
 else
