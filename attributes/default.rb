@@ -17,5 +17,11 @@
 # limitations under the License.
 
 ## Todo: generate it through api when Omnitruck API issue(i.e It doesn't give latest chef-server package) resolved
-default['chef-server']['package_file'] = "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/precise/chef-server-core_12.0.0-1_amd64.deb"
-default['chef-server-image']['chef-repo'] = "https://github.com/opscode/chef-repo.git"
+default['chef-server-image']['package_name'] = "chef-server"
+default['chef-server-image']['package_value '] = ""
+default['chef-server-image']['package_url'] = "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/precise/chef-server-core_12.0.0-1_amd64.deb"
+
+default['chef']['install_path'] = "/opt/opscode"
+default['chef-server']['configuration'] = {}
+default['chef']['addons']['ubuntu_supported_codenames'] =  %w{lucid natty precise}
+default['chef']['addons']['ubuntu_distribution'] =  node['chef']['addons']['ubuntu_supported_codenames'].include?(node['lsb']['codename']) ? node['lsb']['codename'] : 'lucid'
