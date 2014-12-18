@@ -19,23 +19,20 @@
 case node['platform']
 when 'ubuntu'
 
-  if node['chef-server-image']['package_url']
-    case node['platform_family']
-    when 'debian'  
-      package "apt-transport-https"
+  unless node['chef-server-image']['package_url']
+    package "apt-transport-https"
 
-      apt_repository 'chef-stable' do
-        uri "https://packagecloud.io/chef/stable/ubuntu/"
-        key 'https://packagecloud.io/gpg.key'
-        distribution node['chef']['addons']['ubuntu_distribution']
-        deb_src true
-        trusted true
-        components %w( main )
-      end
-
-      # Performs an apt-get update
-      include_recipe 'apt::default'
+    apt_repository 'chef-stable' do
+      uri "https://packagecloud.io/chef/stable/ubuntu/"
+      key 'https://packagecloud.io/gpg.key'
+      distribution node['chef']['addons']['ubuntu_distribution']
+      deb_src true
+      trusted true
+      components %w( main )
     end
+
+    # Performs an apt-get update
+    include_recipe 'apt::default'
   end
 
   chef_path = "/opt/chef/bin"
