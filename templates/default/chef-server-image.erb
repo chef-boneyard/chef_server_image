@@ -89,8 +89,10 @@ fi
 
 ## Install Chef Server
 
-temp_dir="<%= Dir.mktmpdir %>"
+temp_dir="/opt/chef/chef-server-package"
+
 <% if node['chef-server-image']['package_url'] %>
+  sudo mkdir $temp_dir
   if ! exists /usr/bin/chef-server-ctl; then
     echo "Installing Chef Server..."
     pkg_url="<%= node['chef-server-image']['package_url'] %>"
@@ -104,6 +106,8 @@ temp_dir="<%= Dir.mktmpdir %>"
     fi
     sudo dpkg -i $temp_dir/chef-server-pkg
     checkStatus "Chef-Server Package installation failed..."
+    # Remove chef-server installer file
+    sudo rm -rf $temp_dir
   fi
 <% else %>
   version="<%= node['chef-server-image']['package_version'] %>"
@@ -115,11 +119,17 @@ sudo chef-server-ctl reconfigure
 
 sudo mkdir /etc/chef-server
 
-cat > /etc/chef-server/chef-server.rb <<'EOP'
+<% if node['azure'] %>
+  api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}' | cut -d . -f 1).cloudapp.net"
+<% else %>
+  api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
+<% end %>
+
+cat > /etc/chef-server/chef-server.rb <<EOP
 
 topology "standalone"
 
-api_fqdn "<%= node['chef-server']['api_fqdn'] %>"
+api_fqdn $api_fqdn
 
 <% node['chef-server']['configuration'].each_pair do |component, tunables| -%>
 <% case tunables -%>
