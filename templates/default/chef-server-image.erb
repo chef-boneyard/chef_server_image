@@ -149,9 +149,29 @@ sudo chef-server-ctl org-create $orgShortName $orgFullName --association_user $u
 checkStatus "Error: Chef-Server organization creation fails. Please try again"
 echo "New organization created for chef-server. RSA private key for organization stored at: /etc/chef-server/$orgShortName-validator.pem"
 
+## Install Webui
+echo "Installing Management Console (i.e web portal) for Chef Server..."
+sudo chef-server-ctl install opscode-manage
+
+checkStatus "Error: Management Console installation failed!!! Please try again"
+echo "Installed Webui for Chef Server"
+
+## configure webui
+echo "Configuring Chef Server's Webui..."
+sudo opscode-manage-ctl reconfigure
+checkStatus "Error: Unable to configure webui"
+echo "Configured Chef Server's Webui"
+
+## reconfigure chef-server for Webui
+echo "Reconfiguring chef-server for Webui..."
+sudo chef-server-ctl reconfigure
+checkStatus "Error: Unable to reconfigure chef-server"
+echo "Reconfigured chef-server for Webui"
+
 echo "Successfully Installed Chef Server v12.0 !!!"
 echo "USER NAME = ${user}"
 echo "PASSWORD = ${password}"
 echo "ORGANIZATION = ${orgShortName}"
 echo "USER PRIVATE_KEY = /etc/chef-server/$user.pem"
 echo "ORGANIZATION PRIVATE_KEY = /etc/chef-server/$orgShortName-validator.pem"
+echo "Webui URL = "; cat /etc/chef-server/chef-server.rb | grep api_fqdn | awk '{print $2}'
