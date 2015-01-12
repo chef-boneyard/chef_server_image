@@ -73,6 +73,13 @@ when 'ubuntu'
      ' >> ~/.bashrc
     EOH
   end
+  # Delete chef config files.
+  %w{/etc/chef /var/chef}.each do |chef_dir|
+    directory "#{chef_dir}" do
+      recursive true
+      action :delete
+    end
+  end
 else
   Chef::Log.warn('chef-server-image recipes can only be run on the Ubuntu platform.')
 end
