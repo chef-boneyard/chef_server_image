@@ -1,0 +1,187 @@
+#!/bin/bash
+
+exists() {
+  if command -v $1 &>/dev/null
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
+usage() { echo "Usage: $0 [-u <administrator-name>] [-p <administrator-password>] [-f <user-full-name>] [-l <user-last-name>] [-e <email-id>] [-o <organization-name>] [-o <organization-full-name>]" 1>&2; exit 1; }
+
+# Check last run command status.
+# $1 => "Error message"
+checkStatus() {
+  if [ $? -ne 0 ]; then
+    echo "Error: $1"
+    exit 1
+  fi
+}
+
+## Take chef server configuration from user
+while getopts ":u:f:l:e:p:o:F:" opt; do
+  case "${opt}" in
+    u)
+      user=${OPTARG}
+      ;;
+    f)
+      userFirstName=${OPTARG}
+      ;;
+    l)
+      userLastName=${OPTARG}
+      ;;
+    e)
+      email=${OPTARG}
+      ;;
+    p)
+      password=${OPTARG}
+      ;;
+    o)
+      orgShortName=${OPTARG}
+      ;;
+    F)
+      orgFullName=${OPTARG}
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+# Prompt if user missed any option.
+if [ -z "${user}" ];then
+  echo "Enter user name for chef-server:"
+  read user
+fi
+
+if [ -z "${userFirstName}" ];then
+  userFirstName=$user
+fi
+
+if [ -z "${userLastName}" ];then
+  userLastName=$user
+fi
+
+if [ -z "${email}" ];then
+  email="default@testdefault.com"
+fi
+
+if [ -z "${password}" ];then
+  echo "Enter secure password for user:"
+  read password
+fi
+
+if [ -z "${orgShortName}" ];then
+  orgShortName="${user}organization"
+fi
+
+if [ -z "${orgFullName}" ];then
+  orgFullName="${user}organization"
+fi
+
+if [ -z "${user}" ] || [ -z "${userFirstName}" ] || [ -z "${userLastName}" ] || [ -z "${email}" ] || [ -z "${password}" ] || [ -z "${orgShortName}" ] || [ -z "${orgFullName}" ]; then
+  usage
+fi
+
+## Install Chef Server
+
+temp_dir="/opt/chef/chef-server-package"
+
+<% if node['chef-server-image']['package_url'] %>
+  sudo mkdir $temp_dir
+  if ! exists /usr/bin/chef-server-ctl; then
+    echo "Installing Chef Server..."
+    pkg_url="<%= node['chef-server-image']['package_url'] %>"
+    if exists wget; then
+      wget ${pkg_url} -O ${temp_dir}/chef-server-pkg --no-check-certificate
+    elif exists curl; then
+      curl -L ${pkg_url} -o ${temp_dir}/chef-server-pkg
+    else
+      echo "Neither wget nor curl found. Please install one and try again." >&2
+      exit 1
+    fi
+    sudo dpkg -i $temp_dir/chef-server-pkg
+    checkStatus "Chef-Server Package installation failed..."
+    # Remove chef-server installer file
+    sudo rm -rf $temp_dir
+  fi
+<% else %>
+  version="<%= node['chef-server-image']['package_version'] %>"
+  name="<%= node['chef-server-image']['package_name'] %>"
+  sudo apt-get install $name=$version
+<% end %>
+
+sudo chef-server-ctl reconfigure
+
+sudo mkdir /etc/chef-server
+
+<% if node['azure'] %>
+  api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}' | cut -d . -f 1).cloudapp.net"
+<% else %>
+  api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
+<% end %>
+
+cat > /etc/chef-server/chef-server.rb <<EOP
+
+topology "standalone"
+
+api_fqdn $api_fqdn
+
+<% node['chef-server']['configuration'].each_pair do |component, tunables| -%>
+<% case tunables -%>
+<% when Hash -%>
+<% tunables.each_pair do |name, value| -%>
+<% value = %Q["#{value}"] if value.kind_of?(String) -%>
+<%= "#{component.gsub("-","_")}['#{name}'] = #{value}" %>
+<% end -%>
+<% when String -%>
+<%= component.gsub('-', '_') %> "<%= tunables %>"
+<% end -%>
+<% end -%>
+EOP
+
+sudo chef-server-ctl reconfigure
+
+## Create user
+echo "Creating new admin user for chef-server..."
+sudo chef-server-ctl user-create $user $userFirstName $userLastName $email $password --filename /etc/chef-server/$user.pem
+checkStatus "Error: Chef-Server user creation fails. Please try again"
+echo "Admin user created for chef-server. RSA private key for user stored at: /etc/chef-server/$user.pem"
+
+## Create org for above user
+echo "Creating new organization for admin user"
+sudo chef-server-ctl org-create $orgShortName $orgFullName --association_user $user --filename /etc/chef-server/$orgShortName-validator.pem
+
+checkStatus "Error: Chef-Server organization creation fails. Please try again"
+echo "New organization created for chef-server. RSA private key for organization stored at: /etc/chef-server/$orgShortName-validator.pem"
+
+## Install Webui
+echo "Installing Management Console (i.e web portal) for Chef Server..."
+sudo chef-server-ctl install opscode-manage
+
+checkStatus "Error: Management Console installation failed!!! Please try again"
+echo "Installed Webui for Chef Server"
+
+## configure webui
+echo "Configuring Chef Server's Webui..."
+sudo opscode-manage-ctl reconfigure
+checkStatus "Error: Unable to configure webui"
+echo "Configured Chef Server's Webui"
+
+## reconfigure chef-server for Webui
+echo "Reconfiguring chef-server for Webui..."
+sudo chef-server-ctl reconfigure
+checkStatus "Error: Unable to reconfigure chef-server"
+echo "Reconfigured chef-server for Webui"
+
+echo "Successfully Installed Chef Server v12.0 !!!"
+echo "USER NAME = ${user}"
+echo "PASSWORD = ${password}"
+echo "ORGANIZATION = ${orgShortName}"
+echo "USER PRIVATE_KEY = /etc/chef-server/$user.pem"
+echo "ORGANIZATION PRIVATE_KEY = /etc/chef-server/$orgShortName-validator.pem"
+echo "Webui URL = "; cat /etc/chef-server/chef-server.rb | grep api_fqdn | awk '{print $2}'
