@@ -70,7 +70,7 @@ when 'ubuntu'
         ###
         #############################################################################################"
      fi
-     ' >> ~/.bashrc
+     ' >> /etc/bash.bashrc
     EOH
   end
   # Delete chef config files.
