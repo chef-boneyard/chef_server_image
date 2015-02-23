@@ -54,7 +54,7 @@ when 'ubuntu'
     cwd "#{ENV['HOME']}"
     code <<-EOH
     sudo echo '
-     sudo chef-server-ctl status opscode-erchef | grep "run: opscode-erchef"
+     sudo chef-server-ctl status opscode-erchef 2> /dev/null | grep "run: opscode-erchef"
      if [ $? -ne 0 ]; then
        echo "
         #############################################################################################
