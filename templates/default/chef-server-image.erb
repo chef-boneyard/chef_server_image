@@ -167,7 +167,14 @@ checkStatus "Error: Management Console installation failed!!! Please try again"
 echo "Installed Webui for Chef Server"
 
 ## configure webui
+## create configuration file
 echo "Configuring Chef Server's Webui..."
+echo "Creating configuraion file"
+cat > /etc/chef-server/chef-server.rb <<EOP
+
+disable_sign_up true
+EOP
+checkStatus "Error: Unable to create configuraion file for webui"
 sudo opscode-manage-ctl reconfigure
 checkStatus "Error: Unable to configure webui"
 echo "Configured Chef Server's Webui"
