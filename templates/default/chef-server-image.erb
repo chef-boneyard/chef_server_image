@@ -85,11 +85,12 @@ if [ -z "${password}" ];then
 fi
 
 if [ -z "${orgShortName}" ];then
-  orgShortName="${user}organization"
+  echo "Enter Organization's short name:"
+  read orgShortName
 fi
 
 if [ -z "${orgFullName}" ];then
-  orgFullName="${user}organization"
+  orgFullName=$orgShortName
 fi
 
 if [ -z "${user}" ] || [ -z "${userFirstName}" ] || [ -z "${userLastName}" ] || [ -z "${email}" ] || [ -z "${password}" ] || [ -z "${orgShortName}" ] || [ -z "${orgFullName}" ]; then
