@@ -12,13 +12,13 @@ exists() {
 usage()  { echo "Usage: $0";
 echo
 echo "General Options:"
-echo "-u                user-name"
+echo "-u                username"
 echo "-p                password";
 echo "-f                user-first-name";
 echo "-l                user-last-name";
 echo "-e                email-id";
 echo "-o                organization-short-name";
-echo "-f                organization-full-name" 1>&2; exit 1; }
+echo "-F                organization-full-name" 1>&2; exit 1; }
 
 # Check last run command status.
 # $1 => "Error message"
