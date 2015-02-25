@@ -36,7 +36,7 @@ when 'ubuntu'
   end
 
   chef_path = "/opt/chef/bin"
-  
+
   template "#{chef_path}/chef-server-setup" do
     source 'chef-server-image.erb'
     owner 'root'
@@ -59,8 +59,7 @@ when 'ubuntu'
        echo "
         #############################################################################################
         ### Run following command to install and configure Chef Server
-        ### $ chef-server-setup -u <user-name> -f <user-first-name> -l <user-last-name> -e <email-id>
-        ###   -p <password> -o <organizations-short-name> -F <organizations-full-name>
+        ### $ sudo chef-server-setup -u <username> -p <password> -o <organizations-short-name>
         #############################################################################################"
      else
        echo "

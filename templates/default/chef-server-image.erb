@@ -9,7 +9,16 @@ exists() {
   fi
 }
 
-usage() { echo "Usage: $0 [-u <administrator-name>] [-p <administrator-password>] [-f <user-full-name>] [-l <user-last-name>] [-e <email-id>] [-o <organization-name>] [-o <organization-full-name>]" 1>&2; exit 1; }
+usage()  { echo "Usage: $0";
+echo
+echo "General Options:"
+echo "-u                username"
+echo "-p                password";
+echo "-f                user-first-name";
+echo "-l                user-last-name";
+echo "-e                email-id";
+echo "-o                organization-short-name";
+echo "-F                organization-full-name" 1>&2; exit 1; }
 
 # Check last run command status.
 # $1 => "Error message"
@@ -76,11 +85,12 @@ if [ -z "${password}" ];then
 fi
 
 if [ -z "${orgShortName}" ];then
-  orgShortName="${user}organization"
+  echo "Enter Organization's short name:"
+  read orgShortName
 fi
 
 if [ -z "${orgFullName}" ];then
-  orgFullName="${user}organization"
+  orgFullName=$orgShortName
 fi
 
 if [ -z "${user}" ] || [ -z "${userFirstName}" ] || [ -z "${userLastName}" ] || [ -z "${email}" ] || [ -z "${password}" ] || [ -z "${orgShortName}" ] || [ -z "${orgFullName}" ]; then
