@@ -170,9 +170,19 @@ echo "Installed Webui for Chef Server"
 ## create configuration file
 echo "Configuring Chef Server's Webui..."
 echo "Creating configuraion file"
-cat > /etc/chef-server/chef-server.rb <<EOP
-
+cat > /etc/opscode-manage/manage.rb <<EOP
 disable_sign_up true
+<% node['opscode-manage-ui']['configuration'].each_pair do |component, tunables| -%>
+<% case tunables -%>
+<% when Hash -%>
+<% tunables.each_pair do |name, value| -%>
+<% value = %Q["#{value}"] if value.kind_of?(String) -%>
+<%= "#{component.gsub("-","_")}['#{name}'] = #{value}" %>
+<% end -%>
+<% when String -%>
+<%= component.gsub('-', '_') %> "<%= tunables %>"
+<% end -%>
+<% end -%>
 EOP
 checkStatus "Error: Unable to create configuraion file for webui"
 sudo opscode-manage-ctl reconfigure
