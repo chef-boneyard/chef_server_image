@@ -58,20 +58,24 @@ when 'ubuntu'
      if [ $? -ne 0 ]; then
        echo "
         #############################################################################################
-        ### Run following command to install and configure Chef Server
-        ### $ sudo chef-server-setup -u <username> -p <password> -o <organizations-short-name>
+        ## Run following command to install and configure Chef Server
+        ## $ sudo chef-server-setup -u <username> -p <password> -o <organizations-short-name>
+        ## Example:
+        ##   sudo chef-server-setup -u sysadmin -p \$MYPASSWORD -o engineering
+        ## Use -? option for additional customization options 
         #############################################################################################"
      else
        echo "
         #############################################################################################
-        ### Run following command to configure Chef Server
-        ### $ chef-server-ctl
-        ###
+        ## Run following command to configure Chef Server
+        ## $ chef-server-ctl
+        ## Use -? option for additional customization options
         #############################################################################################"
      fi
      ' >> /etc/bash.bashrc
     EOH
   end
+
   # Delete chef config files.
   %w{/etc/chef /var/chef}.each do |chef_dir|
     directory "#{chef_dir}" do
