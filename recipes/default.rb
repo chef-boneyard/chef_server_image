@@ -59,7 +59,7 @@ when 'ubuntu'
        echo "
         #############################################################################################
         ### Run following command to install and configure Chef Server
-        ### $ chef-server-setup -u <username> -p <password> -o <organizations-short-name>
+        ### $ sudo chef-server-setup -u <username> -p <password> -o <organizations-short-name>
         #############################################################################################"
      else
        echo "
