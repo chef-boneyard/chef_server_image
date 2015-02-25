@@ -89,6 +89,8 @@ fi
 
 ## Install Chef Server
 
+echo "This may take 30 minutes or more"
+sleep 15
 temp_dir="/opt/chef/chef-server-package"
 
 <% if node['chef-server-image']['package_url'] %>
