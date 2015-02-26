@@ -103,7 +103,7 @@ echo "This may take 30 minutes or more"
 sleep 15
 temp_dir="/opt/chef/chef-server-package"
 
-<% if node['azure'] %>
+<% if node['chef-server-image']['cloud_provider'] == "azure" && node['chef-server-image']['fqdn_type'] == "external" %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}' | cut -d . -f 1).cloudapp.net"
 <% else %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
