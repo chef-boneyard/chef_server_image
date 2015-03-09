@@ -80,8 +80,10 @@ EOP
 
 # Prompt if user missed any option.
 if [ -z "${user}" ];then
-  echo "Enter user name for chef-server:"
-  read user
+  user="admin"
+  echo "Enter user name for chef-server (default is admin):"
+  read username
+  [ -n "$username" ] && user=$username
 fi
 
 if [ -z "${userFirstName}" ];then
@@ -97,13 +99,16 @@ if [ -z "${email}" ];then
 fi
 
 if [ -z "${password}" ];then
-  echo "Enter secure password for user:"
-  read password
+  while read -s -p 'Enter new password: ' password && [[ -z "$password" ]] ; do
+    echo -e "\n Password should not be blank!"
+  done
 fi
 
 if [ -z "${orgShortName}" ];then
-  echo "Enter Organization's short name:"
-  read orgShortName
+  orgShortName="azure"
+  echo "Enter Organization's short name (default is azure):"
+  read shortname
+  [ -n "$shortname" ] && orgShortName=$shortname
 fi
 
 if [ -z "${orgFullName}" ];then
@@ -128,6 +133,22 @@ temp_dir="/opt/chef/chef-server-package"
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
 <% end %>
 
+echo "Chef server details"
+echo  "Username:  $user"
+echo  "FQDN    :  $api_fqdn"
+
+read -p "Do you want to proceed for installation (y/n)?" choice
+if [ "$choice" == "n" ]; then
+  echo "You can run chef-server-setup -? to see detailed options, or just run chef-server-setup to try again."
+  exit 0
+fi
+
+## Install Chef Server
+
+echo "This may take 30 minutes or more"
+sleep 15
+temp_dir="/opt/chef/chef-server-package"
+
 <% if node['chef-server-image']['package_url'] %>
   sudo mkdir $temp_dir
   if ! exists /usr/bin/chef-server-ctl; then
@@ -149,7 +170,7 @@ temp_dir="/opt/chef/chef-server-package"
   fi
 <% else %>
   version="<%= node['chef-server-image']['package_version'] %>"
-  name="<%= node['chef-server-image']['package_name'] %>"  
+  name="<%= node['chef-server-image']['package_name'] %>"
   <% if node['chef-server-image']['package_version'].empty? || node['chef-server-image']['package_version'].nil? %>
     sudo apt-get install $name
   <% else %>
@@ -178,6 +199,7 @@ api_fqdn $api_fqdn
 <%= component.gsub('-', '_') %> "<%= tunables %>"
 <% end -%>
 <% end -%>
+
 EOP
 
 sudo chef-server-ctl reconfigure
