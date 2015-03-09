@@ -26,3 +26,5 @@ default['chef-server']['configuration'] = {}
 default['opscode-manage-ui']['configuration'] = {}
 default['chef']['addons']['ubuntu_supported_codenames'] =  %w{lucid natty precise}
 default['chef']['addons']['ubuntu_distribution'] =  node['chef']['addons']['ubuntu_supported_codenames'].include?(node['lsb']['codename']) ? node['lsb']['codename'] : 'lucid'
+default['chef-server-image']['cloud_provider'] = "azure"
+default['chef-server-image']['fqdn_type'] = "internal"  #Valid values = external,internal
