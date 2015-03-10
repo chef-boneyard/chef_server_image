@@ -217,4 +217,4 @@ echo "USER NAME = ${user}"
 echo "ORGANIZATION = ${orgShortName}"
 echo "USER PRIVATE_KEY = /etc/chef-server/$user.pem"
 echo "ORGANIZATION PRIVATE_KEY = /etc/chef-server/$orgShortName-validator.pem"
-echo "Webui URL = "; cat /etc/chef-server/chef-server.rb | grep api_fqdn | awk '{print $2}'
+echo -n "Webui URL = https://"; cat /etc/chef-server/chef-server.rb | grep api_fqdn | awk '{print $2}'
