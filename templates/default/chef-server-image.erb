@@ -106,7 +106,7 @@ fi
 
 if [ -z "${orgShortName}" ];then
   orgShortName="azure"
-  echo "Enter Organization's short name (default is azure):"
+  echo -e "\nEnter Organization's short name (default is azure):"
   read shortname
   [ -n "$shortname" ] && orgShortName=$shortname
 fi
