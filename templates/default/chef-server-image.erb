@@ -83,13 +83,13 @@ fi
 
 if [ -z "${password}" ];then
   while read -s -p 'Enter new password: ' password && [[ -z "$password" ]] ; do
-    echo -e "\n Password should not be blank!"
+    echo -e "\nPassword should not be blank!"
   done  
 fi
 
 if [ -z "${orgShortName}" ];then
   orgShortName="azure"
-  echo "Enter Organization's short name (default is azure):"
+  echo -e "\nEnter Organization's short name (default is azure):"
   read shortname
   [ -n "$shortname" ] && orgShortName=$shortname
 fi
