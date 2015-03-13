@@ -49,7 +49,6 @@ when 'ubuntu'
   link "/usr/bin/chef-server-setup" do
     to "#{chef_path}/chef-server-setup"
   end
-
   
   unless File.directory?('/opt/opscode')
     directory "/opt/opscode" do
