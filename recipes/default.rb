@@ -50,6 +50,26 @@ when 'ubuntu'
     to "#{chef_path}/chef-server-setup"
   end
 
+  
+  unless File.directory?('/opt/opscode')
+    directory "/opt/opscode" do
+      owner 'root'
+      group 'root'
+      mode '0755'
+      action :create
+    end 
+  end
+
+  # creating LICENSE file on server on /opt/opscode location
+  license_file = File.expand_path('../../LICENSE', __FILE__)
+  file '/opt/opscode/LICENSE' do
+    content File.read("#{license_file}")
+    owner 'root'
+    group 'root'
+    mode '444'
+    action :create
+  end
+
   bash "update .bashrc to show chef-server configuration help" do
     cwd "#{ENV['HOME']}"
     code <<-EOH

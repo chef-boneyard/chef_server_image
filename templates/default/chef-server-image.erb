@@ -18,6 +18,7 @@ echo "-f                user-first-name";
 echo "-l                user-last-name";
 echo "-e                email-id";
 echo "-o                organization-short-name";
+echo "-L                accept-license";
 echo "-F                organization-full-name" 1>&2; exit 1; }
 
 # Check last run command status.
@@ -30,7 +31,7 @@ checkStatus() {
 }
 
 ## Take chef server configuration from user
-while getopts ":u:f:l:e:p:o:F:" opt; do
+while getopts ":u:f:l:e:p:o:F:L" opt; do
   case "${opt}" in
     u)
       user=${OPTARG}
@@ -53,6 +54,9 @@ while getopts ":u:f:l:e:p:o:F:" opt; do
     F)
       orgFullName=${OPTARG}
       ;;
+    L)
+      acceptLicense=true
+      ;;
     *)
       usage
       ;;
@@ -60,6 +64,18 @@ while getopts ":u:f:l:e:p:o:F:" opt; do
 done
 
 shift $((OPTIND-1))
+
+if [ -z "${acceptLicense}" ];then
+  read -p "Do you agree to the End User License Agreement located at /opt/opscode/LICENSE (y/n)?" choice
+  if [ "$choice" != "y" ]; then
+    echo "License agreement needs to be accpeted for installation."
+    exit 0
+  fi
+fi
+
+cat > /opt/opscode/chef_server_license.log <<EOP
+Chef Server End User License accepted on : <%= Time.now %>
+EOP
 
 # Prompt if user missed any option.
 if [ -z "${user}" ];then
