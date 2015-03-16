@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: chef-server-image
+# Cookbook Name:: chef_server_image
 # Attributes:: default
 #
 # Copyright:: Copyright (c) 2014 Chef Software, Inc.
@@ -17,14 +17,14 @@
 # limitations under the License.
 
 ## Todo: generate it through api when Omnitruck API issue(i.e It doesn't give latest chef-server package) resolved
-default['chef-server-image']['package_name'] = "chef-server"
-default['chef-server-image']['package_version'] = ""
-default['chef-server-image']['package_url'] = "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/trusty/chef-server-core_12.0.4-1_amd64.deb"
+default['chef_server_image']['package_name'] = "chef-server"
+default['chef_server_image']['package_version'] = ""
+default['chef_server_image']['package_url'] = "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/trusty/chef-server-core_12.0.4-1_amd64.deb"
 default['chef']['install_path'] = "/opt/opscode"
 default['chef-server']['api_fqdn'] = node['fqdn']
 default['chef-server']['configuration'] = {}
 default['opscode-manage-ui']['configuration'] = {}
 default['chef']['addons']['ubuntu_supported_codenames'] =  %w{lucid natty precise}
 default['chef']['addons']['ubuntu_distribution'] =  node['chef']['addons']['ubuntu_supported_codenames'].include?(node['lsb']['codename']) ? node['lsb']['codename'] : 'lucid'
-default['chef-server-image']['cloud_provider'] = "azure"
-default['chef-server-image']['fqdn_type'] = "internal"  #Valid values = external,internal
+default['chef_server_image']['cloud_provider'] = "azure"
+default['chef_server_image']['fqdn_type'] = "internal"  #Valid values = external,internal

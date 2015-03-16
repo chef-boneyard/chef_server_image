@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'chef'
 
-recipe = "chef-server-image::default"
+recipe = "chef_server_image::default"
 
 describe recipe do
   context "when windows" do
@@ -44,7 +44,7 @@ describe recipe do
     end
 
     it 'setup environment for chef-server installation on missing package_url' do
-      chef_run.node.set['chef-server-image']['package_url'] = false
+      chef_run.node.set['chef_server_image']['package_url'] = false
       ubuntu_distribution = "test_distro"
       chef_run.node.set['chef']['addons']['ubuntu_distribution'] = ubuntu_distribution
       chef_run.converge(described_recipe)
@@ -72,7 +72,7 @@ describe recipe do
     end
 
     it 'setup environment for chef-server installation with package_url' do
-      chef_run.node.set['chef-server-image']['package_url'] =  "https://chef-server-package-url"
+      chef_run.node.set['chef_server_image']['package_url'] =  "https://chef-server-package-url"
       chef_run.converge(described_recipe)
       ubuntu_distribution = "test_distro"
       expect(chef_run).to_not install_package("apt-transport-https")
