@@ -1,4 +1,4 @@
-# chef-server-image Change Log
+# chef_server_image Change Log
 
 ## Unreleased changes
 
