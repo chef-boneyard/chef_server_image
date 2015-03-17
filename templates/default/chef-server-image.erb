@@ -66,13 +66,14 @@ done
 shift $((OPTIND-1))
 
 if [ -z "${acceptLicense}" ];then
-  read -p "Do you agree to the End User License Agreement located at /opt/opscode/LICENSE (y/n)?" choice
-  if [ "$choice" != "y" ]; then
+  read -p "By continuing you are bound to the terms here: https://www.chef.io/online-master-agreement/ Type 'yes' if you agree (yes/no)?" choice
+  if [ "$choice" != 'yes' ]; then
     echo "License agreement needs to be accpeted for installation."
     exit 0
   fi
 fi
 
+## creating End user license agreement acceptance log file
 cat > /opt/opscode/chef_server_license.log <<EOP
 Chef Server End User License accepted on : <%= Time.now %>
 EOP
