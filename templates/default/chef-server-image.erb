@@ -82,9 +82,19 @@ if [ -z "${email}" ];then
 fi
 
 if [ -z "${password}" ];then
-  while read -s -p 'Enter new password: ' password && [[ -z "$password" ]] ; do
-    echo -e "\nPassword should not be blank!"
-  done  
+ count=0
+ while [[ -z "$password" ]]; do
+    if [[ "$count" -eq 3 ]]; then
+      exit 1
+    fi
+
+    read -s -p 'Enter new password: ' password
+    if [[ -z "$password" ]] ; then
+      echo -e "\nPassword should not be blank!"
+    fi
+
+    let count++
+ done
 fi
 
 if [ -z "${orgShortName}" ];then
