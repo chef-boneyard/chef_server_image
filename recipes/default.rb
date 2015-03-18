@@ -26,7 +26,7 @@ when 'ubuntu'
       uri "https://packagecloud.io/chef/stable/ubuntu/"
       key 'https://packagecloud.io/gpg.key'
       distribution node['chef']['addons']['ubuntu_distribution']
-      deb_src true
+      deb_src false
       trusted true
       components %w( main )
     end
