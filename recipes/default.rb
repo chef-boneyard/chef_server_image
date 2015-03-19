@@ -49,6 +49,15 @@ when 'ubuntu'
   link "/usr/bin/chef-server-setup" do
     to "#{chef_path}/chef-server-setup"
   end
+  
+  unless File.directory?('/opt/opscode')
+    directory "/opt/opscode" do
+      owner 'root'
+      group 'root'
+      mode '0755'
+      action :create
+    end 
+  end
 
   bash "update .bashrc to show chef-server configuration help" do
     cwd "#{ENV['HOME']}"
