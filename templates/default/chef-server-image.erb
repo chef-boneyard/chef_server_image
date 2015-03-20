@@ -133,7 +133,11 @@ temp_dir="/opt/chef/chef-server-package"
 <% else %>
   version="<%= @package_version %>"
   name="<%= @package_name %>"
-  sudo apt-get install $name=$version
+  <% if @package_version.empty? || @package_version.nil? %>
+    sudo apt-get install $name
+  <% else %>
+    sudo apt-get install $name=$version
+  <% end %>
 <% end %>
 
 sudo chef-server-ctl reconfigure

@@ -7,7 +7,7 @@ action :setup  do
       uri "https://packagecloud.io/chef/stable/ubuntu/"
       key 'https://packagecloud.io/gpg.key'
       distribution new_resource.apt_repo_distribution
-      deb_src true
+      deb_src false
       trusted true
       components %w( main )
     end

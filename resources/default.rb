@@ -10,6 +10,6 @@ attribute :api_fqdn, :kind_of => String , :default => node['fqdn']
 attribute :cloud_provider, :kind_of => String , :default => "azure"
 attribute :fqdn_type, :kind_of => String , :default => "internal"   #Valid values = external,internal
 attribute :package_version, :kind_of => String , :default => ""
-attribute :package_name, :kind_of => String , :default => "chef-server"
+attribute :package_name, :kind_of => String , :default => "chef-server-core"
 attribute :chef_server_configuration, :kind_of => Hash , :default => {}
 attribute :opscode_ui_configuration, :kind_of => Hash , :default => {}
