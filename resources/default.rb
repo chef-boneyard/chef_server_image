@@ -2,8 +2,7 @@ actions :setup
 default_action :setup
 
 attribute :given_name, :name_attribute => true
-attribute :package_url, :kind_of => String ,
- :default => "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/trusty/chef-server-core_12.0.4-1_amd64.deb"
+attribute :package_url, :kind_of => String, :default => nil
 attribute :apt_repo_distribution, :kind_of => String ,
  :default => node['chef']['addons']['ubuntu_supported_codenames'].include?(node['lsb']['codename']) ? node['lsb']['codename'] : 'lucid'
 attribute :api_fqdn, :kind_of => String , :default => node['fqdn']
