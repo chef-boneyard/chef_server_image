@@ -21,7 +21,7 @@ Exposes a bash command `chef-server-setup` which sets up and configures chef-ser
 
 #### Attribute Parameters
 
-- `package_url`: package_url for chef-server. Default is `https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/trusty/chef-server-core_12.0.4-1_amd64.deb`
+- `package_url`: package_url for chef-server.
 - `api_fqdn`: set API FQDN
 - `cloud_provider`: set the cloud provider. Default is `azure`
 - `fqdn_type`: Allowed values are `internal` or `external`. Default is `internal`
@@ -30,7 +30,6 @@ Exposes a bash command `chef-server-setup` which sets up and configures chef-ser
 - `chef_server_configuration`: Configuration hash for chef server
 - `opscode_ui_configuration`: Configuration hash for Opscode UI.
 - `apt_repo_distribution`: Apt repository distribution
-- `timeout`: How many seconds to let the command run before timing it out.
 
 #### Examples
 
