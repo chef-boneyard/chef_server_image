@@ -13,7 +13,7 @@ action :setup  do
     end
 
     # Performs an apt-get update
-    include_recipe 'apt::default'
+    run_context.include_recipe 'apt::default'
   end
 
   chef_path = "/opt/chef/bin"
