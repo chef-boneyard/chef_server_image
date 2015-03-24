@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'chef'
 
-recipe = "chef_server_image::default"
+recipe = "chef_server_image::test_recipe"
 
 describe recipe do
   context "when windows" do
@@ -44,21 +44,18 @@ describe recipe do
     end
 
     it 'setup env' do
-	expect(chef_run).to setup_chef_server_image('chef_server_image setup')
+	expect(chef_run).to setup_chef_server_image('test_chef_server_image setup').with(package_url: "https://web-dl.packagecloud.io/chef/stable/packages/ubuntu/trusty/chef-server-core_12.0.4-1_amd64.deb")
     end
 
 
-    it 'setup environment for chef-server installation on missing package_url' do
-      ubuntu_distribution = "precise"
-      chef_run.node.set['chef']['addons']['ubuntu_distribution'] = ubuntu_distribution
-      chef_run.converge(described_recipe)
-
-      expect(chef_run).to install_package('apt-transport-https')
-      expect(chef_run).to add_apt_repository("chef-stable").with(
+    it 'setup environment for chef-server installation with package_url' do
+      ubuntu_distribution = "test_distro"
+      expect(chef_run).to_not install_package("apt-transport-https")
+      expect(chef_run).to_not add_apt_repository("chef-stable").with(
         uri: "https://packagecloud.io/chef/stable/ubuntu/", key: 'https://packagecloud.io/gpg.key',
-        distribution: ubuntu_distribution, deb_src: false,
+        distribution: ubuntu_distribution, deb_src: true,
         trusted: true, components: ["main"])
-      expect(chef_run).to include_recipe('apt::default')
+      expect(chef_run).to_not include_recipe('apt::default')
 
       expect(chef_run).to create_template('/opt/chef/bin/chef-server-setup').with(
         source: 'chef-server-image.erb',
@@ -74,5 +71,7 @@ describe recipe do
       expect(chef_run).to delete_directory('/etc/chef').with(recursive: true)
       expect(chef_run).to delete_directory('/var/chef').with(recursive: true)
     end
+
   end
 end
+
