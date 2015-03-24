@@ -130,11 +130,7 @@ orgNameLabel="\nEnter Organization's short name (default is azure): \n Must begi
 if [ -z "${orgShortName}" ];then
   orgShortName="azure"
   echo -e $orgNameLabel
-  read shortname
-  if [ -z "${orgShortName}" ];then
-    echo -e $orgNameLabel
-    read orgShortName
-  fi
+  read shortname  
   [ -n "$shortname" ] && orgShortName=$shortname
 fi
 
