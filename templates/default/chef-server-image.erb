@@ -98,6 +98,12 @@ if [ -z "${email}" ];then
   email="default@testdefault.com"
 fi
 
+validEmail='^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$'
+if [[ ! $email =~ $validEmail ]]; then
+  echo "Email id not Valid"
+  exit 1
+fi
+
 if [ -z "${password}" ];then
  count=0
  while [[ -z "$password" ]]; do
@@ -105,7 +111,7 @@ if [ -z "${password}" ];then
       exit 1
     fi
 
-    read -s -p 'Enter new password: ' password
+    read -s -p 'Enter new password: \n Must have at least 6 characters ' password
     if [[ -z "$password" ]] ; then
       echo -e "\nPassword should not be blank!"
     fi
@@ -114,11 +120,31 @@ if [ -z "${password}" ];then
  done
 fi
 
+if [[ ${#password} -lt 6 ]]; then
+  echo "Password must have at least 6 characters"
+  exit 1
+fi
+
+orgNameLabel="\nEnter Organization's short name (default is azure): \n Must begin with lowercase letter or digit and \n may only contain lower-case letters, digits, hyphens, and underscores, and must be between 1 and 255 characters."
+
 if [ -z "${orgShortName}" ];then
   orgShortName="azure"
-  echo -e "\nEnter Organization's short name (default is azure):"
+  echo -e $orgNameLabel
   read shortname
+  if [ -z "${orgShortName}" ];then
+    echo -e $orgNameLabel
+    read orgShortName
+  fi
   [ -n "$shortname" ] && orgShortName=$shortname
+fi
+
+validOrgShortName='^[a-z0-9_-]+$'
+if [[ (${#orgShortName} -le 1 || ${#orgShortName} -ge 255) ]]; then
+  echo "Organization name must be between 1 and 255 characters"
+  exit 1
+elif [[ ! $orgShortName =~ $validOrgShortName ]]; then
+  echo "Organization name accepts only lowercase letter, digits, underscore, hyphen."
+  exit 1
 fi
 
 if [ -z "${orgFullName}" ];then
