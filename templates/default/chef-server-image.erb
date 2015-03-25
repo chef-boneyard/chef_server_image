@@ -143,6 +143,7 @@ temp_dir="/opt/chef/chef-server-package"
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
 <% end %>
 
+<<<<<<< HEAD
 echo "Chef server details"
 echo  "Username:  $user"
 echo  "FQDN    :  $api_fqdn"
@@ -159,6 +160,8 @@ echo "This may take 30 minutes or more"
 sleep 15
 temp_dir="/opt/chef/chef-server-package"
 
+=======
+>>>>>>> c6aaf3f030f4c7a7a9cc36900a8e0fff4cc74d55
 <% if @package_url %>
   sudo mkdir $temp_dir
   if ! exists /usr/bin/chef-server-ctl; then
