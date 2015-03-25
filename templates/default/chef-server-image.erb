@@ -111,7 +111,7 @@ if [ -z "${password}" ];then
       exit 1
     fi
 
-    read -s -p 'Enter new password: \n Must have at least 6 characters ' password
+    read -s -p 'Enter new password: \n Must have at least 8 characters ' password
     if [[ -z "$password" ]] ; then
       echo -e "\nPassword should not be blank!"
     fi
@@ -120,8 +120,8 @@ if [ -z "${password}" ];then
  done
 fi
 
-if [[ ${#password} -lt 6 ]]; then
-  echo "Password must have at least 6 characters"
+if [[ ${#password} -lt 8 ]]; then
+  echo "Password must have at least 8 characters"
   exit 1
 fi
 
