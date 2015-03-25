@@ -135,9 +135,9 @@ echo "This may take 30 minutes or more"
 sleep 15
 temp_dir="/opt/chef/chef-server-package"
 
-<% if node['chef-server']['api_fqdn'] %>
-  api_fqdn = node['chef-server']['api_fqdn']
-<% elsif node['chef-server-image']['cloud_provider'] == "azure" && node['chef-server-image']['fqdn_type'] == "external" %>
+<% if @api_fqdn %>
+  api_fqdn = <%= @api_fqdn %>
+<% elsif @cloud_provider == "azure" && @fqdn_type == "external" %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}' | cut -d . -f 1).cloudapp.net"
 <% else %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
@@ -159,11 +159,11 @@ echo "This may take 30 minutes or more"
 sleep 15
 temp_dir="/opt/chef/chef-server-package"
 
-<% if node['chef-server-image']['package_url'] %>
+<% if @package_url %>
   sudo mkdir $temp_dir
   if ! exists /usr/bin/chef-server-ctl; then
     echo "Installing Chef Server..."
-    pkg_url="<%= node['chef-server-image']['package_url'] %>"
+    pkg_url="<%= @package_url %>"
     if exists wget; then
       wget ${pkg_url} -O ${temp_dir}/chef-server-pkg --no-check-certificate
     elif exists curl; then
@@ -179,9 +179,9 @@ temp_dir="/opt/chef/chef-server-package"
     sudo rm -rf $temp_dir
   fi
 <% else %>
-  version="<%= node['chef-server-image']['package_version'] %>"
-  name="<%= node['chef-server-image']['package_name'] %>"
-  <% if node['chef-server-image']['package_version'].empty? || node['chef-server-image']['package_version'].nil? %>
+  version="<%= @package_version %>"
+  name="<%= @package_name %>"
+  <% if @package_version.empty? || @package_version.nil? %>
     sudo apt-get install $name
   <% else %>
     sudo apt-get install $name=$version
@@ -198,7 +198,7 @@ topology "standalone"
 
 api_fqdn $api_fqdn
 
-<% node['chef-server']['configuration'].each_pair do |component, tunables| -%>
+<% @chef_server_configuration.each_pair do |component, tunables| -%>
 <% case tunables -%>
 <% when Hash -%>
 <% tunables.each_pair do |name, value| -%>
@@ -242,7 +242,7 @@ checkStatus "Error: Unable to configure webui"
 echo "Creating configuraion file"
 cat > /etc/opscode-manage/manage.rb <<EOP
 disable_sign_up true
-<% node['opscode-manage-ui']['configuration'].each_pair do |component, tunables| -%>
+<% @opscode_ui_configuration.each_pair do |component, tunables| -%>
 <% case tunables -%>
 <% when Hash -%>
 <% tunables.each_pair do |name, value| -%>

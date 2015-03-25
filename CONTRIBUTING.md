@@ -1,9 +1,9 @@
-# Contributing to chef-server-image
+# Contributing to chef_server_image
 
 We utilize **Github Issues** for issue tracking and contributions. You can contribute in two ways:
 
 1. Reporting an issue or making a feature request [here](#issues).
-2. Adding features or fixing bugs yourself and contributing your code to `chef-server-image`.
+2. Adding features or fixing bugs yourself and contributing your code to `chef_server_image`.
 
 ## Contribution Process
 
@@ -73,7 +73,7 @@ Date:   Wed Sep 18 11:44:40 2013 -0700
 ------------------------------------------------------------------------
 ```
 
-## <a name="issues"></a> chef-server-image Issue Tracking
+## <a name="issues"></a> chef_server_image Issue Tracking
 
 Issue Tracking for this cookbook is handled using Github Issues.
 
@@ -82,7 +82,7 @@ If you are familiar with Chef and know the component that is causing you a probl
   Github project. All of our Open Source Software can be found in our
   [Github organization](https://github.com/opscode/).
 
-Otherwise you can file your issue in the [Chef project](https://github.com/opscode/chef-server-image/issues)
+Otherwise you can file your issue in the [Chef project](https://github.com/opscode/chef_server_image/issues)
   and we will make sure it gets filed against the appropriate project.
 
 In order to decrease the back and forth an issues and help us get to the bottom of them quickly
