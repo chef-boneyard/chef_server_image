@@ -1,10 +1,9 @@
 action :setup  do
-
- unless new_resource.package_url
-    package "apt-transport-https"
+  unless new_resource.package_url
+    package 'apt-transport-https'
 
     apt_repository 'chef-stable' do
-      uri "https://packagecloud.io/chef/stable/ubuntu/"
+      uri 'https://packagecloud.io/chef/stable/ubuntu/'
       key 'https://packagecloud.io/gpg.key'
       distribution new_resource.apt_repo_distribution
       deb_src false
@@ -16,7 +15,7 @@ action :setup  do
     run_context.include_recipe 'apt::default'
   end
 
-  chef_path = "/opt/chef/bin"
+  chef_path = '/opt/chef/bin'
 
   template "#{chef_path}/chef-server-setup" do
     source 'chef-server-image.erb'
@@ -37,11 +36,11 @@ action :setup  do
   end
 
   # create symlink for /chef/opt/bin/chef-server-setup.sh to /usr/bin/
-  link "/usr/bin/chef-server-setup" do
+  link '/usr/bin/chef-server-setup' do
     to "#{chef_path}/chef-server-setup"
   end
 
-  bash "update .bashrc to show chef-server configuration help" do
+  bash 'update .bashrc to show chef-server configuration help' do
     cwd "#{ENV['HOME']}"
     code <<-EOH
     sudo echo '
@@ -50,10 +49,7 @@ action :setup  do
        echo "
         #############################################################################################
         ## Run following command to install and configure Chef Server
-        ## $ sudo chef-server-setup -u <username> -p <password> -o <organizations-short-name>
-        ## Example:
-        ##   sudo chef-server-setup -u sysadmin -p \$MYPASSWORD -o engineering
-        ## Use -? option for additional customization options
+        ## $ sudo chef-server-setup
         #############################################################################################"
      else
        echo "
@@ -68,11 +64,10 @@ action :setup  do
   end
 
   # Delete chef config files.
-  %w{/etc/chef /var/chef}.each do |chef_dir|
+  %w(/etc/chef /var/chef).each do |chef_dir|
     directory "#{chef_dir}" do
       recursive true
       action :delete
     end
   end
-
 end

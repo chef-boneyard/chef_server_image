@@ -130,7 +130,7 @@ orgNameLabel="\nEnter Organization's short name (default is azure): \n Must begi
 if [ -z "${orgShortName}" ];then
   orgShortName="azure"
   echo -e $orgNameLabel
-  read shortname  
+  read shortname
   [ -n "$shortname" ] && orgShortName=$shortname
 fi
 
@@ -153,13 +153,9 @@ fi
 
 ## Install Chef Server
 
-echo "This may take 30 minutes or more"
-sleep 15
-temp_dir="/opt/chef/chef-server-package"
-
 <% if @api_fqdn %>
-  api_fqdn = <%= @api_fqdn %>
-<% elsif @cloud_provider == "azure" && @fqdn_type == "external" %>
+  api_fqdn=<%= @api_fqdn %>
+<% elsif @cloud_provider == 'azure' && @fqdn_type == 'external' %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}' | cut -d . -f 1).cloudapp.net"
 <% else %>
   api_fqdn="$(sudo cat /etc/resolv.conf | grep search | awk '{print $2}')"
