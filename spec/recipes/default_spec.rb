@@ -49,7 +49,7 @@ describe recipe do
 
 
     it 'setup environment for chef-server installation on missing package_url' do
-      ubuntu_distribution = "precise"
+      ubuntu_distribution = "lucid"
       chef_run.node.set['chef']['addons']['ubuntu_distribution'] = ubuntu_distribution
       chef_run.converge(described_recipe)
 
