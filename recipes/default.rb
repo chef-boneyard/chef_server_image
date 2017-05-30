@@ -18,7 +18,7 @@
 
 case node['platform']
 when 'ubuntu'
-  chef_server_image "chef_server_image setup" do
+  chef_server_image 'chef_server_image setup' do
     action :setup
   end
 else

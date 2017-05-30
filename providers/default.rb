@@ -1,4 +1,4 @@
-action :setup  do
+action :setup do
   unless new_resource.package_url
     package 'apt-transport-https'
 
@@ -22,16 +22,14 @@ action :setup  do
     owner 'root'
     group 'root'
     mode '755'
-    variables({
-     :api_fqdn => new_resource.api_fqdn,
-     :cloud_provider => new_resource.cloud_provider,
-     :fqdn_type => new_resource.fqdn_type,
-     :package_url => new_resource.package_url,
-     :package_version => new_resource.package_version,
-     :package_name => new_resource.package_name,
-     :chef_server_configuration => new_resource.chef_server_configuration,
-     :opscode_ui_configuration => new_resource.opscode_ui_configuration
-    })
+    variables(api_fqdn: new_resource.api_fqdn,
+              cloud_provider: new_resource.cloud_provider,
+              fqdn_type: new_resource.fqdn_type,
+              package_url: new_resource.package_url,
+              package_version: new_resource.package_version,
+              package_name: new_resource.package_name,
+              chef_server_configuration: new_resource.chef_server_configuration,
+              opscode_ui_configuration: new_resource.opscode_ui_configuration)
     action :create
   end
 
@@ -41,7 +39,7 @@ action :setup  do
   end
 
   bash 'update .bashrc to show chef-server configuration help' do
-    cwd "#{ENV['HOME']}"
+    cwd (ENV['HOME']).to_s
     code <<-EOH
     sudo echo '
      sudo chef-server-ctl status opscode-erchef 2> /dev/null | grep "run: opscode-erchef"
@@ -65,7 +63,7 @@ action :setup  do
 
   # Delete chef config files.
   %w(/etc/chef /var/chef).each do |chef_dir|
-    directory "#{chef_dir}" do
+    directory chef_dir.to_s do
       recursive true
       action :delete
     end
